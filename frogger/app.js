@@ -13,24 +13,33 @@ let timerId
 let outcomeTimerId
 let currentTime = 20
 
+const backgroundMusic = new Audio('apt.mp3');
+backgroundMusic.loop = true; 
+
+const jumpSound = new Audio('jump.mp3');
+const collisionSound = new Audio('collision.mp3');
+const winSound = new Audio('victory.mp3');
+
 function moveFrog(e) {
     squares[currentIndex].classList.remove('frog')
 
     switch(e.key) {
         case 'ArrowLeft' :
-             if (currentIndex % width !== 0) currentIndex -= 1
+            if (currentIndex % width !== 0) currentIndex -= 1
             break
         case 'ArrowRight' :
             if (currentIndex % width < width - 1) currentIndex += 1
             break
         case 'ArrowUp' :
-            if (currentIndex - width >=0 ) currentIndex -= width
+            if (currentIndex - width >= 0 ) currentIndex -= width
             break
         case 'ArrowDown' :
             if (currentIndex + width < width * width) currentIndex += width
             break
     }
+    
     squares[currentIndex].classList.add('frog')
+    jumpSound.play();  
 }
 
 function autoMoveElements() {
@@ -138,6 +147,7 @@ function lose() {
         squares[currentIndex].classList.contains('l5') ||
         currentTime <= 0
     ) {
+        collisionSound.play();  
         resultDisplay.textContent = 'You lose!'
         clearInterval(timerId)
         clearInterval(outcomeTimerId)
@@ -148,6 +158,7 @@ function lose() {
 
 function win() {
     if (squares[currentIndex].classList.contains('ending-block')) {
+        winSound.play(); 
         resultDisplay.textContent = 'You Win!'
         clearInterval(timerId)
         clearInterval(outcomeTimerId)
@@ -162,9 +173,11 @@ startPauseButton.addEventListener('click', () => {
         outcomeTimerId = null
         timerId = null
         document.removeEventListener('keyup', moveFrog)
+        backgroundMusic.pause();
     } else {
         timerId = setInterval(autoMoveElements, 1000)
         outcomeTimerId = setInterval(checkOutComes, 50)
         document.addEventListener('keyup', moveFrog)
+        backgroundMusic.play(); 
     }
 })
