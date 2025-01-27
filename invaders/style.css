@@ -27,3 +27,19 @@
 .boom {
 	background-color: red;
 }
+
+.boss {
+	background-color: red;
+	border-radius: 50%;
+}
+
+.boss-health-bar {
+	width: 100%;
+	height: 10px;
+	background-color: grey;
+	margin-top: 10px;
+}
+
+.boss-health-bar {
+    background-color: red;
+}
