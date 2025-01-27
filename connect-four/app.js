@@ -1,8 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const squares = document.querySelectorAll('.grid div')
-  const result = document.querySelector('#result')
-  const displayCurrentPlayer = document.querySelector('#current-player')
-  let currentPlayer = 1
+  const squares = document.querySelectorAll('.grid div');
+  const result = document.querySelector('#result');
+  const displayCurrentPlayer = document.querySelector('#current-player');
+  const timerDisplay = document.createElement('span'); // Add a span to display the timer
+  document.body.insertBefore(timerDisplay, result);
+
+  let currentPlayer = 1;
+  let timer;
+  let timerInterval;
+
 
   const winningArrays = [
     [0, 1, 2, 3],
@@ -76,6 +82,27 @@ document.addEventListener('DOMContentLoaded', () => {
     [13, 20, 27, 34],
   ]
 
+  function startTimer() {
+    let timeLeft = 10; // 10 seconds per turn
+    timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+    
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      timerDisplay.innerText = `Time Left: ${timeLeft}s`;
+      
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval); // Stop the timer
+        switchPlayer(); // Switch turn if time expires
+      }
+    }, 1000);
+  }
+
+  function switchPlayer() {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    displayCurrentPlayer.innerHTML = currentPlayer;
+    startTimer(); // Start a new timer for the next player
+  }
+
   function checkBoard() {
     for (let y = 0; y < winningArrays.length; y++) {
       const square1 = squares[winningArrays[y][0]]
@@ -108,22 +135,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   for (let i = 0; i < squares.length; i++) {
     squares[i].onclick = () => {
-      //if the square below your current square is taken, you can go ontop of it
-      if (squares[i + 7].classList.contains('taken') &&!squares[i].classList.contains('taken')) {
+      // If the square below your current square is taken, you can go on top of it
+      if (squares[i + 7] && !squares[i].classList.contains('taken') && squares[i + 7].classList.contains('taken')) {
         if (currentPlayer == 1) {
-          squares[i].classList.add('taken')
-          squares[i].classList.add('player-one')
-          currentPlayer = 2
-          displayCurrentPlayer.innerHTML = currentPlayer
-        } else if (currentPlayer == 2){
-          squares[i].classList.add('taken')
-          squares[i].classList.add('player-two')
-          currentPlayer = 1
-          displayCurrentPlayer.innerHTML = currentPlayer        
-        } 
-      } else alert('cant go here')
-      checkBoard()
+          squares[i].classList.add('taken');
+          squares[i].classList.add('player-one');
+          switchPlayer();
+        } else if (currentPlayer == 2) {
+          squares[i].classList.add('taken');
+          squares[i].classList.add('player-two');
+          switchPlayer();
+        }
+      } else {
+        alert('Cannot go here');
+      }
+      checkBoard();
     }
   }
-  
-})
+
+  // Start the timer when the page is loaded
+  startTimer();
+});
