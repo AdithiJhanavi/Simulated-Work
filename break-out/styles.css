@@ -1,9 +1,23 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  text-align: center;
+}
+
+h1 {
+  font-size: 30px;
+  color: black;
+}
+
 .grid {
-  position: absolute;
+  position: relative;
   width: 560px;
   height: 300px;
   border: solid 1px black;
   margin-top: 100px;
+  background-color: #fff;
 }
 
 .user {
@@ -26,4 +40,18 @@
   height: 20px;
   border-radius: 10px;
   background-color: red;
+}
+
+.power-up {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: green;
+  border-radius: 50%;
+  animation: fall 2s linear infinite;
+}
+
+@keyframes fall {
+  0% { top: 0; }
+  100% { top: 100%; }
 }
